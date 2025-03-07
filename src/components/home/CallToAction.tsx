@@ -1,9 +1,12 @@
 
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import { CustomButton } from "../ui/CustomButton";
 import { ArrowRight, Recycle, ShoppingBag, Users } from "lucide-react";
 
 const CallToAction = () => {
+  const navigate = useNavigate();
+  
   return (
     <section className="py-20 bg-gradient-to-r from-jaivak-500 to-ocean-500 text-white relative overflow-hidden">
       {/* Abstract shapes */}
@@ -24,6 +27,7 @@ const CallToAction = () => {
               variant="glass" 
               size="xl" 
               className="backdrop-blur-md group"
+              onClick={() => navigate("/auth")}
             >
               Sign Up Now
               <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
@@ -32,6 +36,7 @@ const CallToAction = () => {
               variant="outline" 
               size="xl" 
               className="bg-transparent border-white/30 text-white hover:bg-white/10"
+              onClick={() => navigate("/collection")}
             >
               Learn How It Works
             </CustomButton>

@@ -2,8 +2,11 @@
 import React from "react";
 import { ArrowRight, Leaf, Recycle, TreePine } from "lucide-react";
 import { CustomButton } from "../ui/CustomButton";
+import { useNavigate } from "react-router-dom";
 
 const Hero = () => {
+  const navigate = useNavigate();
+  
   return (
     <section className="relative overflow-hidden pt-32 pb-16 md:pt-40 md:pb-24">
       {/* Background decorations */}
@@ -37,11 +40,20 @@ const Hero = () => {
           </p>
           
           <div className="flex flex-wrap items-center justify-center gap-4 animate-slide-up animate-stagger-2">
-            <CustomButton variant="gradient" size="xl" className="group">
+            <CustomButton 
+              variant="gradient" 
+              size="xl" 
+              className="group"
+              onClick={() => navigate("/collection")}
+            >
               Start Recycling
               <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
             </CustomButton>
-            <CustomButton variant="outline" size="xl">
+            <CustomButton 
+              variant="outline" 
+              size="xl"
+              onClick={() => navigate("/marketplace")}
+            >
               Explore Products
             </CustomButton>
           </div>
