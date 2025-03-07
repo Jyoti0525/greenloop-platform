@@ -9,8 +9,37 @@ import {
   Award 
 } from "lucide-react";
 import { CustomButton } from "../ui/CustomButton";
+import { useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
+import { useInView } from "react-intersection-observer";
 
 const Features = () => {
+  const navigate = useNavigate();
+  const { ref, inView } = useInView({
+    threshold: 0.1,
+    triggerOnce: true,
+  });
+
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+        delayChildren: 0.3,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { y: 30, opacity: 0 },
+    visible: {
+      y: 0,
+      opacity: 1,
+      transition: { duration: 0.5, ease: "easeOut" },
+    },
+  };
+
   const features = [
     {
       icon: <Map className="h-8 w-8" />,
@@ -62,10 +91,20 @@ const Features = () => {
     },
   ];
 
+  const handleNavigate = (path: string) => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    setTimeout(() => navigate(path), 300);
+  };
+
   return (
     <section className="py-20 bg-slate-50 dark:bg-slate-800">
       <div className="container mx-auto px-6">
-        <div className="max-w-3xl mx-auto text-center mb-16">
+        <motion.div 
+          className="max-w-3xl mx-auto text-center mb-16"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+        >
           <div className="inline-block bg-ocean-50 dark:bg-ocean-500/20 px-4 py-1.5 rounded-full text-sm font-medium text-ocean-700 dark:text-ocean-300 mb-6">
             Platform Features
           </div>
@@ -75,12 +114,23 @@ const Features = () => {
           <p className="text-lg text-slate-600 dark:text-slate-400">
             JaiVaK provides all the tools you need to participate in the circular economy and make a positive environmental impact.
           </p>
-        </div>
+        </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+        <motion.div 
+          ref={ref}
+          variants={containerVariants}
+          initial="hidden"
+          animate={inView ? "visible" : "hidden"}
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto"
+        >
           {features.map((feature, index) => (
-            <div 
-              key={feature.title} 
+            <motion.div 
+              key={feature.title}
+              variants={itemVariants}
+              whileHover={{ 
+                y: -8, 
+                boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1)" 
+              }}
               className="bg-white dark:bg-slate-900 rounded-xl overflow-hidden shadow-sm border border-slate-100 dark:border-slate-700 group hover:shadow-md transition-all"
             >
               <div className={`bg-gradient-to-r ${feature.color} p-5 text-white`}>
@@ -98,7 +148,7 @@ const Features = () => {
                 <CustomButton 
                   variant="link" 
                   className="px-0 text-sm group"
-                  onClick={() => window.location.href = feature.link}
+                  onClick={() => handleNavigate(feature.link)}
                 >
                   Learn More
                   <svg 
@@ -112,9 +162,9 @@ const Features = () => {
                   </svg>
                 </CustomButton>
               </div>
-            </div>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       </div>
     </section>
   );
