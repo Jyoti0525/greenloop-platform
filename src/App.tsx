@@ -9,6 +9,10 @@ import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import Auth from "./pages/Auth";
 import Profile from "./pages/Profile";
+import Collection from "./pages/Collection";
+import Marketplace from "./pages/Marketplace";
+import Community from "./pages/Community";
+import Franchise from "./pages/Franchise";
 import PageTransition from "./components/ui/PageTransition";
 import ScrollToTop from "./components/ui/ScrollToTop";
 
@@ -46,6 +50,26 @@ const AnimatedRoutes = () => {
         <Route path="/profile/*" element={
           <PageTransition>
             <Profile />
+          </PageTransition>
+        } />
+        <Route path="/collection" element={
+          <PageTransition>
+            <Collection />
+          </PageTransition>
+        } />
+        <Route path="/marketplace" element={
+          <PageTransition>
+            <Marketplace />
+          </PageTransition>
+        } />
+        <Route path="/community" element={
+          <PageTransition>
+            <Community />
+          </PageTransition>
+        } />
+        <Route path="/franchise" element={
+          <PageTransition>
+            <Franchise />
           </PageTransition>
         } />
         {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

@@ -1,259 +1,403 @@
 
-import React, { useEffect } from "react";
-import Navbar from "../components/layout/Navbar";
-import Footer from "../components/layout/Footer";
-import { CustomButton } from "../components/ui/CustomButton";
-import { Users, Award, BookOpen, Globe, MessageCircle, Heart } from "lucide-react";
+import React from "react";
+import { motion } from "framer-motion";
+import { useInView } from "react-intersection-observer";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
+import { CustomButton } from "@/components/ui/CustomButton";
+import { Leaf, Users, Trophy, BookOpen, Calendar, MessageSquare, ArrowRight } from "lucide-react";
+import Navbar from "@/components/layout/Navbar";
+import Footer from "@/components/layout/Footer";
+
+// Mock data for community events
+const communityEvents = [
+  {
+    id: 1,
+    title: "Community Clean-up Day",
+    date: "June 15, 2023",
+    location: "Central Park",
+    description: "Join us for a day of community service as we clean up our local park and collect green waste for recycling.",
+    attendees: 34
+  },
+  {
+    id: 2,
+    title: "Sustainable Gardening Workshop",
+    date: "June 22, 2023",
+    location: "JaiVaK Community Center",
+    description: "Learn sustainable gardening techniques using our organic compost and eco-friendly practices.",
+    attendees: 28
+  },
+  {
+    id: 3,
+    title: "Green Waste Collection Drive",
+    date: "July 5, 2023",
+    location: "Multiple Locations",
+    description: "Special collection drive for green waste across the city. Schedule your pickup or drop off at designated points.",
+    attendees: 56
+  }
+];
+
+// Mock data for forum posts
+const forumPosts = [
+  {
+    id: 1,
+    title: "Best practices for composting kitchen waste?",
+    author: "GreenThumb",
+    date: "May 28, 2023",
+    replies: 12,
+    views: 145
+  },
+  {
+    id: 2,
+    title: "How to maximize benefits from organic fertilizers",
+    author: "OrganicFarmer",
+    date: "May 30, 2023",
+    replies: 8,
+    views: 97
+  },
+  {
+    id: 3,
+    title: "Starting a community garden - Looking for advice",
+    author: "CommunityBuilder",
+    date: "June 2, 2023",
+    replies: 15,
+    views: 203
+  },
+  {
+    id: 4,
+    title: "Urban composting solutions for small spaces",
+    author: "CityDweller",
+    date: "June 5, 2023",
+    replies: 7,
+    views: 86
+  }
+];
 
 const Community = () => {
-  // Scroll to top on page load
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
-
-  const communityPosts = [
-    {
-      id: 1,
-      author: "Jennifer K.",
-      avatar: "/placeholder.svg",
-      title: "My Garden Transformation with JaiVaK Compost",
-      excerpt: "I wanted to share how using JaiVaK's organic compost completely transformed my garden this season. The results have been incredible!",
-      likes: 124,
-      comments: 28,
-      date: "2 days ago"
-    },
-    {
-      id: 2,
-      author: "Michael R.",
-      avatar: "/placeholder.svg",
-      title: "Urban Community Garden Initiative",
-      excerpt: "Our neighborhood started a community garden using JaiVaK products. Here's how we organized it and the impact it's had on our community.",
-      likes: 98,
-      comments: 42,
-      date: "5 days ago"
-    },
-    {
-      id: 3,
-      author: "Green City Council",
-      avatar: "/placeholder.svg",
-      title: "Partnership Announcement: City-Wide Green Waste Program",
-      excerpt: "We're excited to announce our new partnership with JaiVaK to implement a city-wide green waste collection program starting next month.",
-      likes: 215,
-      comments: 63,
-      date: "1 week ago"
-    }
-  ];
+  const [impactRef, impactInView] = useInView({
+    triggerOnce: true,
+    threshold: 0.1
+  });
+  
+  const [eventsRef, eventsInView] = useInView({
+    triggerOnce: true,
+    threshold: 0.1
+  });
 
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />
-      <main className="flex-grow pt-28">
-        <section className="py-12 bg-gradient-to-r from-ocean-50 to-jaivak-50 dark:from-slate-900 dark:to-slate-800">
+      
+      <main className="flex-grow">
+        {/* Hero Section */}
+        <section className="pt-28 pb-16 bg-gradient-to-b from-green-50 to-white dark:from-slate-900 dark:to-slate-900">
           <div className="container mx-auto px-6">
             <div className="max-w-4xl mx-auto text-center">
-              <div className="inline-block bg-ocean-50 dark:bg-ocean-500/20 px-4 py-1.5 rounded-full text-sm font-medium text-ocean-700 dark:text-ocean-300 mb-6">
-                Community
-              </div>
-              <h1 className="text-3xl md:text-4xl font-bold mb-6">
-                Join Our <span className="text-gradient-primary">Green Community</span>
+              <h1 className="text-4xl md:text-5xl font-bold mb-6 text-slate-900 dark:text-white">
+                Join Our Green Community
               </h1>
-              <p className="text-lg text-slate-600 dark:text-slate-400 mb-8 max-w-2xl mx-auto">
-                Connect with like-minded individuals, share stories, track your environmental impact, and access educational resources.
+              <p className="text-lg text-slate-600 dark:text-slate-300 mb-8">
+                Connect with like-minded individuals, track your environmental impact, and participate in community initiatives for a greener future.
               </p>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <CustomButton variant="gradient" size="lg" className="flex items-center gap-2">
+                  Join Community <Users className="h-5 w-5" />
+                </CustomButton>
+                <CustomButton variant="outline" size="lg" className="flex items-center gap-2">
+                  Learn More <BookOpen className="h-5 w-5" />
+                </CustomButton>
+              </div>
             </div>
           </div>
         </section>
 
-        <section className="py-16 bg-white dark:bg-slate-900">
+        {/* Green Impact Section */}
+        <motion.section 
+          ref={impactRef}
+          initial={{ opacity: 0 }}
+          animate={impactInView ? { opacity: 1 } : { opacity: 0 }}
+          transition={{ duration: 0.6 }}
+          className="py-16 bg-white dark:bg-slate-900"
+        >
           <div className="container mx-auto px-6">
-            <div className="max-w-6xl mx-auto">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
-                <div className="bg-ocean-50 dark:bg-ocean-900/30 rounded-xl p-6 shadow-sm border border-ocean-100 dark:border-ocean-800 text-center group hover:shadow-md transition-all">
-                  <div className="bg-white dark:bg-slate-800 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6 shadow-sm group-hover:shadow transform group-hover:-translate-y-1 transition-all">
-                    <Users className="h-8 w-8 text-ocean-500" />
+            <div className="max-w-4xl mx-auto text-center mb-12">
+              <h2 className="text-3xl font-bold mb-6 text-slate-900 dark:text-white">
+                Green Impact Credits
+              </h2>
+              <p className="text-lg text-slate-600 dark:text-slate-300">
+                Track your environmental contribution and earn rewards through our Green Impact Credits system. Every action counts towards a greener planet.
+              </p>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              <Card className="bg-gradient-to-br from-jaivak-500/10 to-ocean-500/10 border-none">
+                <CardHeader className="text-center">
+                  <div className="w-16 h-16 bg-jaivak-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <Leaf className="h-8 w-8 text-white" />
                   </div>
-                  <h3 className="text-xl font-semibold mb-3 text-slate-800 dark:text-slate-200">
-                    Connect
-                  </h3>
-                  <p className="text-sm text-slate-600 dark:text-slate-400 mb-4">
-                    Join forums, groups, and events to connect with environmentally-conscious individuals and organizations.
+                  <CardTitle>Waste Collection</CardTitle>
+                </CardHeader>
+                <CardContent className="text-center">
+                  <div className="text-3xl font-bold mb-2 text-jaivak-500">247 kg</div>
+                  <p className="text-slate-600 dark:text-slate-400">
+                    Total green waste contributed to our circular economy
                   </p>
-                  <CustomButton variant="outline" size="sm" className="border-ocean-200 dark:border-ocean-700">
-                    Find Groups
-                  </CustomButton>
-                </div>
-
-                <div className="bg-jaivak-50 dark:bg-jaivak-900/30 rounded-xl p-6 shadow-sm border border-jaivak-100 dark:border-jaivak-800 text-center group hover:shadow-md transition-all">
-                  <div className="bg-white dark:bg-slate-800 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6 shadow-sm group-hover:shadow transform group-hover:-translate-y-1 transition-all">
-                    <Award className="h-8 w-8 text-jaivak-500" />
+                </CardContent>
+                <CardFooter className="justify-center pt-0">
+                  <div className="text-sm text-jaivak-500 font-medium">
+                    + 124 Green Credits
                   </div>
-                  <h3 className="text-xl font-semibold mb-3 text-slate-800 dark:text-slate-200">
-                    Impact Tracking
-                  </h3>
-                  <p className="text-sm text-slate-600 dark:text-slate-400 mb-4">
-                    Monitor your Green Impact Credits and see the tangible environmental benefits of your actions.
-                  </p>
-                  <CustomButton variant="outline" size="sm" className="border-jaivak-200 dark:border-jaivak-700">
-                    View Dashboard
-                  </CustomButton>
-                </div>
-
-                <div className="bg-leaf-50 dark:bg-leaf-900/30 rounded-xl p-6 shadow-sm border border-leaf-100 dark:border-leaf-800 text-center group hover:shadow-md transition-all">
-                  <div className="bg-white dark:bg-slate-800 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6 shadow-sm group-hover:shadow transform group-hover:-translate-y-1 transition-all">
-                    <BookOpen className="h-8 w-8 text-leaf-500" />
+                </CardFooter>
+              </Card>
+              
+              <Card className="bg-gradient-to-br from-jaivak-500/10 to-ocean-500/10 border-none">
+                <CardHeader className="text-center">
+                  <div className="w-16 h-16 bg-jaivak-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <Trophy className="h-8 w-8 text-white" />
                   </div>
-                  <h3 className="text-xl font-semibold mb-3 text-slate-800 dark:text-slate-200">
-                    Resources
-                  </h3>
-                  <p className="text-sm text-slate-600 dark:text-slate-400 mb-4">
-                    Access educational materials about sustainability, gardening, waste reduction, and environmental impact.
+                  <CardTitle>Product Purchases</CardTitle>
+                </CardHeader>
+                <CardContent className="text-center">
+                  <div className="text-3xl font-bold mb-2 text-jaivak-500">12 Items</div>
+                  <p className="text-slate-600 dark:text-slate-400">
+                    Sustainable products purchased from our marketplace
                   </p>
-                  <CustomButton variant="outline" size="sm" className="border-leaf-200 dark:border-leaf-700">
-                    Browse Library
+                </CardContent>
+                <CardFooter className="justify-center pt-0">
+                  <div className="text-sm text-jaivak-500 font-medium">
+                    + 60 Green Credits
+                  </div>
+                </CardFooter>
+              </Card>
+              
+              <Card className="bg-gradient-to-br from-jaivak-500/10 to-ocean-500/10 border-none">
+                <CardHeader className="text-center">
+                  <div className="w-16 h-16 bg-jaivak-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <Users className="h-8 w-8 text-white" />
+                  </div>
+                  <CardTitle>Community Participation</CardTitle>
+                </CardHeader>
+                <CardContent className="text-center">
+                  <div className="text-3xl font-bold mb-2 text-jaivak-500">5 Events</div>
+                  <p className="text-slate-600 dark:text-slate-400">
+                    Community events and workshops attended
+                  </p>
+                </CardContent>
+                <CardFooter className="justify-center pt-0">
+                  <div className="text-sm text-jaivak-500 font-medium">
+                    + 75 Green Credits
+                  </div>
+                </CardFooter>
+              </Card>
+            </div>
+            
+            <div className="mt-12 text-center">
+              <Card className="max-w-md mx-auto border-2 border-jaivak-500">
+                <CardHeader>
+                  <CardTitle className="text-jaivak-500">Total Impact</CardTitle>
+                </CardHeader>
+                <CardContent className="text-center">
+                  <div className="text-4xl font-bold mb-2 text-jaivak-500">259</div>
+                  <p className="text-slate-600 dark:text-slate-400 font-medium">
+                    Green Impact Credits
+                  </p>
+                  <div className="w-full bg-slate-200 rounded-full h-2.5 mt-4">
+                    <div className="bg-jaivak-500 h-2.5 rounded-full" style={{ width: '65%' }}></div>
+                  </div>
+                  <div className="text-sm text-slate-500 mt-2">41 more credits until Silver Level</div>
+                </CardContent>
+                <CardFooter className="justify-center">
+                  <CustomButton variant="gradient" size="sm">
+                    View Full Impact Report
                   </CustomButton>
-                </div>
-              </div>
+                </CardFooter>
+              </Card>
+            </div>
+          </div>
+        </motion.section>
 
-              <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700 overflow-hidden mb-12">
-                <div className="p-6 border-b border-slate-100 dark:border-slate-700">
-                  <h2 className="text-xl font-semibold text-slate-800 dark:text-slate-200">
-                    Community Highlights
-                  </h2>
-                </div>
-                <div className="divide-y divide-slate-100 dark:divide-slate-700">
-                  {communityPosts.map((post) => (
-                    <div key={post.id} className="p-6 hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors">
-                      <div className="flex items-center mb-3">
-                        <div className="w-10 h-10 rounded-full overflow-hidden bg-slate-200 dark:bg-slate-700 mr-3">
-                          <img src={post.avatar} alt={post.author} className="w-full h-full object-cover" />
-                        </div>
-                        <div>
-                          <h3 className="text-sm font-semibold text-slate-800 dark:text-slate-200">{post.author}</h3>
-                          <p className="text-xs text-slate-500 dark:text-slate-400">{post.date}</p>
-                        </div>
-                      </div>
-                      <h4 className="text-lg font-medium text-slate-800 dark:text-slate-200 mb-2">{post.title}</h4>
-                      <p className="text-sm text-slate-600 dark:text-slate-400 mb-4">{post.excerpt}</p>
-                      <div className="flex items-center space-x-4">
-                        <button className="flex items-center text-sm text-slate-500 hover:text-jaivak-500 dark:text-slate-400 dark:hover:text-jaivak-400 transition-colors">
-                          <Heart className="h-4 w-4 mr-1" />
-                          {post.likes}
-                        </button>
-                        <button className="flex items-center text-sm text-slate-500 hover:text-ocean-500 dark:text-slate-400 dark:hover:text-ocean-400 transition-colors">
-                          <MessageCircle className="h-4 w-4 mr-1" />
-                          {post.comments}
-                        </button>
-                      </div>
-                    </div>
+        {/* Events & Forum Section */}
+        <motion.section 
+          ref={eventsRef}
+          initial={{ opacity: 0 }}
+          animate={eventsInView ? { opacity: 1 } : { opacity: 0 }}
+          transition={{ duration: 0.6 }}
+          className="py-16 bg-slate-50 dark:bg-slate-800"
+        >
+          <div className="container mx-auto px-6">
+            <h2 className="text-3xl font-bold text-center mb-12 text-slate-900 dark:text-white">
+              Community Hub
+            </h2>
+            
+            <Tabs defaultValue="events" className="w-full max-w-5xl mx-auto">
+              <TabsList className="grid w-full grid-cols-2 mb-10">
+                <TabsTrigger value="events" className="flex items-center gap-2">
+                  <Calendar className="h-4 w-4" />
+                  Events & Workshops
+                </TabsTrigger>
+                <TabsTrigger value="forum" className="flex items-center gap-2">
+                  <MessageSquare className="h-4 w-4" />
+                  Community Forum
+                </TabsTrigger>
+              </TabsList>
+              
+              <TabsContent value="events">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                  {communityEvents.map((event) => (
+                    <motion.div
+                      key={event.id}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.3 }}
+                    >
+                      <Card className="h-full flex flex-col">
+                        <CardHeader>
+                          <CardTitle>{event.title}</CardTitle>
+                          <CardDescription>
+                            <div className="flex justify-between mt-2">
+                              <span>{event.date}</span>
+                              <span>{event.location}</span>
+                            </div>
+                          </CardDescription>
+                        </CardHeader>
+                        <CardContent className="flex-grow">
+                          <p className="text-slate-600 dark:text-slate-400 mb-4">
+                            {event.description}
+                          </p>
+                          <div className="text-sm text-jaivak-500">
+                            {event.attendees} people attending
+                          </div>
+                        </CardContent>
+                        <CardFooter className="justify-between">
+                          <div className="text-sm text-slate-500">
+                            +15 Green Credits for attending
+                          </div>
+                          <CustomButton variant="gradient" size="sm">
+                            Register
+                          </CustomButton>
+                        </CardFooter>
+                      </Card>
+                    </motion.div>
                   ))}
                 </div>
-                <div className="p-6 border-t border-slate-100 dark:border-slate-700 text-center">
-                  <CustomButton variant="gradient" size="sm">
-                    View All Posts
+                
+                <div className="text-center mt-10">
+                  <CustomButton variant="outline" size="lg" className="mx-auto flex items-center gap-2">
+                    View All Events <ArrowRight className="h-4 w-4" />
                   </CustomButton>
                 </div>
-              </div>
-
-              <div className="bg-gradient-to-r from-slate-50 to-slate-100 dark:from-slate-800 dark:to-slate-700 rounded-xl p-8 border border-slate-200 dark:border-slate-600">
-                <div className="flex flex-col md:flex-row items-center">
-                  <div className="mb-8 md:mb-0 md:mr-8 md:w-1/2">
-                    <div className="bg-white dark:bg-slate-900 p-6 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700">
-                      <div className="flex items-center justify-between mb-4">
-                        <h3 className="text-xl font-semibold text-slate-800 dark:text-slate-200">
-                          Your Impact
-                        </h3>
-                        <Globe className="h-6 w-6 text-ocean-500" />
-                      </div>
-                      <div className="space-y-4">
-                        <div>
-                          <div className="flex justify-between text-sm mb-1">
-                            <span className="font-medium text-slate-700 dark:text-slate-300">Green Impact Credits</span>
-                            <span className="text-jaivak-600 dark:text-jaivak-400 font-semibold">1,250</span>
-                          </div>
-                          <div className="h-2 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
-                            <div className="bg-jaivak-500 h-full w-3/4 rounded-full"></div>
-                          </div>
-                        </div>
-                        <div>
-                          <div className="flex justify-between text-sm mb-1">
-                            <span className="font-medium text-slate-700 dark:text-slate-300">Waste Recycled</span>
-                            <span className="text-ocean-600 dark:text-ocean-400 font-semibold">85 kg</span>
-                          </div>
-                          <div className="h-2 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
-                            <div className="bg-ocean-500 h-full w-1/2 rounded-full"></div>
-                          </div>
-                        </div>
-                        <div>
-                          <div className="flex justify-between text-sm mb-1">
-                            <span className="font-medium text-slate-700 dark:text-slate-300">CO₂ Emissions Reduced</span>
-                            <span className="text-leaf-600 dark:text-leaf-400 font-semibold">120 kg</span>
-                          </div>
-                          <div className="h-2 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
-                            <div className="bg-leaf-500 h-full w-2/3 rounded-full"></div>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="mt-6">
-                        <CustomButton variant="gradient-secondary" size="sm" className="w-full">
-                          View Full Dashboard
-                        </CustomButton>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="md:w-1/2">
-                    <h3 className="text-xl font-semibold mb-4 text-slate-800 dark:text-slate-200">
-                      Upcoming Community Events
-                    </h3>
+              </TabsContent>
+              
+              <TabsContent value="forum">
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Recent Discussions</CardTitle>
+                    <CardDescription>
+                      Join conversations with our community of eco-enthusiasts
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
                     <div className="space-y-4">
-                      <div className="bg-white dark:bg-slate-900 rounded-lg p-4 shadow-sm border border-slate-200 dark:border-slate-700">
-                        <div className="flex justify-between items-start">
-                          <div>
-                            <h4 className="font-medium text-slate-800 dark:text-slate-200">Urban Gardening Workshop</h4>
-                            <p className="text-sm text-slate-600 dark:text-slate-400">Learn techniques for effective urban gardening with limited space</p>
+                      {forumPosts.map((post) => (
+                        <div 
+                          key={post.id}
+                          className="p-4 border border-slate-200 dark:border-slate-700 rounded-lg hover:border-jaivak-500 hover:shadow-sm transition cursor-pointer"
+                        >
+                          <div className="flex justify-between items-start mb-2">
+                            <h3 className="font-medium text-slate-900 dark:text-white">
+                              {post.title}
+                            </h3>
+                            <div className="text-xs bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-400 px-2 py-1 rounded-full">
+                              Active
+                            </div>
                           </div>
-                          <div className="text-right">
-                            <div className="text-xs font-medium text-ocean-600 dark:text-ocean-400">June 15</div>
-                            <div className="text-xs text-slate-500 dark:text-slate-400">10:00 AM</div>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="bg-white dark:bg-slate-900 rounded-lg p-4 shadow-sm border border-slate-200 dark:border-slate-700">
-                        <div className="flex justify-between items-start">
-                          <div>
-                            <h4 className="font-medium text-slate-800 dark:text-slate-200">Waste Reduction Challenge</h4>
-                            <p className="text-sm text-slate-600 dark:text-slate-400">Join our 30-day challenge to reduce household waste</p>
-                          </div>
-                          <div className="text-right">
-                            <div className="text-xs font-medium text-ocean-600 dark:text-ocean-400">June 20</div>
-                            <div className="text-xs text-slate-500 dark:text-slate-400">Online</div>
+                          <div className="flex justify-between text-sm text-slate-500 dark:text-slate-400">
+                            <span>By {post.author} • {post.date}</span>
+                            <span>{post.replies} replies • {post.views} views</span>
                           </div>
                         </div>
-                      </div>
-                      <div className="bg-white dark:bg-slate-900 rounded-lg p-4 shadow-sm border border-slate-200 dark:border-slate-700">
-                        <div className="flex justify-between items-start">
-                          <div>
-                            <h4 className="font-medium text-slate-800 dark:text-slate-200">Community Cleanup Day</h4>
-                            <p className="text-sm text-slate-600 dark:text-slate-400">Volunteer for our monthly community cleanup initiative</p>
-                          </div>
-                          <div className="text-right">
-                            <div className="text-xs font-medium text-ocean-600 dark:text-ocean-400">June 25</div>
-                            <div className="text-xs text-slate-500 dark:text-slate-400">9:00 AM</div>
-                          </div>
-                        </div>
-                      </div>
+                      ))}
                     </div>
-                    <div className="mt-4 text-center">
-                      <CustomButton variant="outline" size="sm">
-                        View All Events
-                      </CustomButton>
-                    </div>
-                  </div>
-                </div>
-              </div>
+                  </CardContent>
+                  <CardFooter className="flex justify-between">
+                    <CustomButton variant="outline" size="sm">
+                      Browse All Topics
+                    </CustomButton>
+                    <CustomButton variant="gradient" size="sm">
+                      Start New Topic
+                    </CustomButton>
+                  </CardFooter>
+                </Card>
+              </TabsContent>
+            </Tabs>
+          </div>
+        </motion.section>
+
+        {/* Educational Resources */}
+        <section className="py-16 bg-white dark:bg-slate-900">
+          <div className="container mx-auto px-6">
+            <div className="max-w-4xl mx-auto text-center mb-12">
+              <h2 className="text-3xl font-bold mb-6 text-slate-900 dark:text-white">
+                Educational Resources
+              </h2>
+              <p className="text-lg text-slate-600 dark:text-slate-300">
+                Explore our collection of resources to learn more about sustainable practices, composting techniques, and the environmental benefits of our work.
+              </p>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              <Card className="hover:shadow-md transition">
+                <CardHeader>
+                  <CardTitle>Composting Guide</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-slate-600 dark:text-slate-400">
+                    Learn the fundamentals of composting, from setting up your bin to maintaining the perfect balance for nutrient-rich compost.
+                  </p>
+                </CardContent>
+                <CardFooter>
+                  <CustomButton variant="outline" size="sm" className="w-full">
+                    Download PDF
+                  </CustomButton>
+                </CardFooter>
+              </Card>
+              
+              <Card className="hover:shadow-md transition">
+                <CardHeader>
+                  <CardTitle>Video Tutorials</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-slate-600 dark:text-slate-400">
+                    Watch step-by-step video guides on sustainable gardening, waste reduction techniques, and using our products effectively.
+                  </p>
+                </CardContent>
+                <CardFooter>
+                  <CustomButton variant="outline" size="sm" className="w-full">
+                    View Library
+                  </CustomButton>
+                </CardFooter>
+              </Card>
+              
+              <Card className="hover:shadow-md transition">
+                <CardHeader>
+                  <CardTitle>Sustainability Blog</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-slate-600 dark:text-slate-400">
+                    Explore articles on the latest sustainability trends, success stories, and tips for reducing your environmental footprint.
+                  </p>
+                </CardContent>
+                <CardFooter>
+                  <CustomButton variant="outline" size="sm" className="w-full">
+                    Read Articles
+                  </CustomButton>
+                </CardFooter>
+              </Card>
             </div>
           </div>
         </section>
       </main>
+      
       <Footer />
     </div>
   );
